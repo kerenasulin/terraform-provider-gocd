@@ -41,7 +41,10 @@ teardown-test-gocd:
 	rm -f godata/server/config/cruise-config.xml
 	docker-compose down
 
-cleanup: teardown-test-gocd upload_logs
+cleanup: teardown-test-gocd upload_logs clean_files
+
+clean_files:
+	rm -rf godata/server
 
 upload_logs:
 	pip install awscli --upgrade --user
