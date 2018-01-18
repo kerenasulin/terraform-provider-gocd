@@ -1,5 +1,5 @@
-hash: 3b66c7a0db602676f117e58c56c68268822e4b7b4bfcbc24faf7d4ff28ced5ff
-updated: 2018-01-04T06:57:08.947587302Z
+hash: 187b9e39f103773cf0416d2bbf8122b5d966c592b7b5a0650ec867b7e89f2110
+updated: 2018-01-18T09:36:07.208683Z
 imports:
 - name: github.com/agext/levenshtein
   version: 5f10fee965225ac1eecdc234c09daf5cd9e7f7b6
@@ -54,7 +54,7 @@ imports:
   subpackages:
   - spew
 - name: github.com/drewsonne/go-gocd
-  version: 45c0f4759b451fa8019e3fb3316bb6ae0f5607bb
+  version: 9ff9f02728c9ec4c22fbe94d1edc81de50547c13
   subpackages:
   - gocd
 - name: github.com/go-ini/ini
@@ -114,7 +114,7 @@ imports:
 - name: github.com/hashicorp/logutils
   version: 0dc08b1671f34c4250ce212759ebd880f743d883
 - name: github.com/hashicorp/terraform
-  version: a42fdb08a43c7fabb8898fe8c286b793bbaa4835
+  version: a6008b8a48a749c7c167453b9cf55ffd572b9a5d
   subpackages:
   - config
   - config/configschema
@@ -133,6 +133,7 @@ imports:
   - moduledeps
   - plugin
   - plugin/discovery
+  - registry
   - registry/regsrc
   - registry/response
   - svchost
