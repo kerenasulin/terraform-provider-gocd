@@ -85,6 +85,11 @@ func resourcePipeline() *schema.Resource {
 					},
 				},
 			},
+			"materials_json": {
+				Type:     schema.TypeString,
+				Optional: true,
+				Computed: true,
+			},
 			"materials": {
 				Type:     schema.TypeList,
 				MinItems: 1,
@@ -319,10 +324,19 @@ func extractPipeline(d *schema.ResourceData) (p *gocd.Pipeline, err error) {
 
 	p.Name = d.Get("name").(string)
 
+	jsonUnmarshal := []gocd.Material{}
+	if jsonMaterials := d.Get("materials_json"); len(jsonMaterials) > 0 {
+		if err := json.Unmarshal(jsonMaterials, &jsonUnmarshal); err != nil {
+			return err
+		}
+	}
+
 	rawMaterials := d.Get("materials")
 	if materials := rawMaterials.([]interface{}); len(materials) > 0 {
-		if p.Materials, err = extractPipelineMaterials(materials); err != nil {
+		if materials, err = extractPipelineMaterials(materials); err != nil {
 			return nil, err
+		} else {
+			p.Materials = append(materials, jsonMaterials...)
 		}
 	}
 
