@@ -2,6 +2,7 @@ package gocd
 
 import (
 	"context"
+	"encoding/json"
 	"github.com/drewsonne/go-gocd/gocd"
 
 	"github.com/hashicorp/terraform/helper/schema"
@@ -324,19 +325,20 @@ func extractPipeline(d *schema.ResourceData) (p *gocd.Pipeline, err error) {
 
 	p.Name = d.Get("name").(string)
 
-	jsonUnmarshal := []gocd.Material{}
-	if jsonMaterials := d.Get("materials_json"); len(jsonMaterials) > 0 {
-		if err := json.Unmarshal(jsonMaterials, &jsonUnmarshal); err != nil {
-			return err
+	var jsonUnmarshal []gocd.Material
+	if jsonMaterials := d.Get("materials_json").(string); len(jsonMaterials) > 0 {
+		if err := json.Unmarshal([]byte(jsonMaterials), &jsonUnmarshal); err != nil {
+			return nil, err
 		}
 	}
 
+	var processedMaterials []gocd.Material
 	rawMaterials := d.Get("materials")
 	if materials := rawMaterials.([]interface{}); len(materials) > 0 {
-		if materials, err = extractPipelineMaterials(materials); err != nil {
+		if processedMaterials, err = extractPipelineMaterials(materials); err != nil {
 			return nil, err
 		} else {
-			p.Materials = append(materials, jsonMaterials...)
+			p.Materials = append(processedMaterials, jsonUnmarshal...)
 		}
 	}
 
