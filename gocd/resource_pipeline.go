@@ -325,20 +325,11 @@ func extractPipeline(d *schema.ResourceData) (p *gocd.Pipeline, err error) {
 
 	p.Name = d.Get("name").(string)
 
-	var jsonUnmarshal []gocd.Material
-	if jsonMaterials := d.Get("materials_json").(string); len(jsonMaterials) > 0 {
-		if err := json.Unmarshal([]byte(jsonMaterials), &jsonUnmarshal); err != nil {
-			return nil, err
-		}
-	}
-
-	var processedMaterials []gocd.Material
+	jsonMaterials := d.Get("materials_json").(string)
 	rawMaterials := d.Get("materials")
 	if materials := rawMaterials.([]interface{}); len(materials) > 0 {
-		if processedMaterials, err = extractPipelineMaterials(materials); err != nil {
+		if p.Materials, err = extractPipelineMaterials(materials, jsonMaterials); err != nil {
 			return nil, err
-		} else {
-			p.Materials = append(processedMaterials, jsonUnmarshal...)
 		}
 	}
 
@@ -365,8 +356,14 @@ func extractPipelineParameters(rawProperties map[string]interface{}) []*gocd.Par
 	return ps
 }
 
-func extractPipelineMaterials(rawMaterials []interface{}) ([]gocd.Material, error) {
+func extractPipelineMaterials(rawMaterials []interface{}, jsonMaterials string) ([]gocd.Material, error) {
 	ms := []gocd.Material{}
+	if len(jsonMaterials) > 0 {
+		if err := json.Unmarshal([]byte(jsonMaterials), &ms); err != nil {
+			return nil, err
+		}
+	}
+
 	for _, rawMaterial := range rawMaterials {
 		m := gocd.Material{}
 
