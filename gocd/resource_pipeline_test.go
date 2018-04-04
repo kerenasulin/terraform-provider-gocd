@@ -13,6 +13,7 @@ func testResourcePipeline(t *testing.T) {
 	t.Run("FullStack2", testResourcePipelineFullStack2)
 	t.Run("DisableAutoUpdate", testResourcePipelineDisableAutoUpdate)
 	t.Run("LinkedDependencies", testResourcePipelineLinkedDependencies)
+	t.Run("MaterialJson", testResourcePipelineMaterialJson)
 }
 
 func testResourcePipelineLinkedDependencies(t *testing.T) {
@@ -119,6 +120,26 @@ func testResourcePipelineFullStack2(t *testing.T) {
 		Steps: []r.TestStep{
 			{
 				Config: testFile("resource_pipeline.4.rsc.tf"),
+				Check: r.ComposeTestCheckFunc(
+					r.TestCheckResourceAttr(
+						"gocd_pipeline.test-pipeline",
+						"name",
+						"test-pipeline",
+					),
+				),
+			},
+		},
+	})
+}
+func testResourcePipelineMaterialJson(t *testing.T) {
+
+	r.Test(t, r.TestCase{
+		PreCheck:     func() { testAccPreCheck(t) },
+		Providers:    testGocdProviders,
+		CheckDestroy: testGocdPipelineDestroy,
+		Steps: []r.TestStep{
+			{
+				Config: testFile("resource_pipeline.6.rsc.tf"),
 				Check: r.ComposeTestCheckFunc(
 					r.TestCheckResourceAttr(
 						"gocd_pipeline.test-pipeline",
