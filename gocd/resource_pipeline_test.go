@@ -142,9 +142,9 @@ func testResourcePipelineMaterialJson(t *testing.T) {
 				Config: testFile("resource_pipeline.6.rsc.tf"),
 				Check: r.ComposeTestCheckFunc(
 					r.TestCheckResourceAttr(
-						"gocd_pipeline.test-pipeline",
+						"gocd_pipeline.pipe-X",
 						"name",
-						"test-pipeline",
+						"pipe-X",
 					),
 				),
 			},
